@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ListController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+{# Afficher le titre de la formation ayant le plus grand nombre de participants. #}
+{% set nbMax = 0   %}
+{% for f in formations  %}
+    {% set nbMax= max(f.nb_participants, nbMax) %}
+{% endfor   %}
+     {# l'affichage du tableau #}
+        <table border="1">
+        <tr>
+             <th>Reference</th>
+             <th>Titre</th>
+             <th>Description</th>
+             <th>Date début</th>
+             <th>Date fin</th>
+             <th>Nb participants</th>
+        </tr>
+           {% for f in formations %} 
+        <tr>
+
+          {# {% if 'theorique' in f.Description %} #} {# afficher les titres des formations théoriques #}
+            {#  {% if f.nb_participants == nbMax %} #}
+              <td>{{ f.ref }}</td>
+              <td>{{f.Titre | upper }}</td>  {# les titres des formations en majuscule avec upper #}
+              <td>{{f.Description}}</td>
+              <td>{{f.date_debut}}</td>
+              <td>{{f.date_fin}}</td>
+              <td>{{f.nb_participants}}</td>
+              <td>
+                   {% if f.nb_participants == 0 %}
+                     <form action="{{ path('detail', {'id': f.ref}) }}">
+                      <button> Participer </button>
+                     </form>
+                   {% endif %}
+              </td>
+                           {% else %}
+                           <strong> table vide </strong> {# une condition dans le cas où le tableau est vide. #}
+               {#  {% endif %} #}
+              {#  {% endif %} #}
+        
+        </tr>
+            {% endfor %} 
+        </table>
+
+
+       <h1> le nombre de formation est: {{ formations|length }}</h1>
+{# Afficher le nombre total de participants dans toutes les formations. #}
+{% set nbTotal = 0   %}
+{% for f in formations  %}
+    {% set nbTotal= nbTotal+f.nb_participants %}
+{% endfor   %}
+       <h1> le nombre total de participants dans toutes les formations: {{ nbTotal }}</h1>
+
+</div>
+{% endblock %}
